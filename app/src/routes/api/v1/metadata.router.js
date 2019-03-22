@@ -7,8 +7,9 @@ const MetadataValidator = require('validators/metadata.validator');
 const MetadataNotFound = require('errors/metadataNotFound.error');
 const MetadataDuplicated = require('errors/metadataDuplicated.error');
 const MetadataNotValid = require('errors/metadataNotValid.error');
+const InvalidSortParameter = require('errors/invalidSortParameter.error');
 const CloneNotValid = require('errors/cloneNotValid.error');
-const USER_ROLES = require('app.constants').USER_ROLES;
+const { USER_ROLES } = require('app.constants');
 
 const router = new Router();
 
@@ -46,6 +47,7 @@ class MetadataRouter {
         if (ctx.query.language) { filter.language = ctx.query.language; }
         if (ctx.query.limit) { filter.limit = ctx.query.limit; }
         const result = await MetadataService.get(ctx.params.dataset, resource, filter);
+        ctx.set('cache', `${resource.id}-metadata-all`);
         ctx.body = MetadataSerializer.serialize(result);
     }
 
@@ -55,6 +57,7 @@ class MetadataRouter {
         try {
             const user = ctx.request.body.loggedUser;
             const result = await MetadataService.create(user, ctx.params.dataset, resource, ctx.request.body);
+            ctx.set('uncache', `metadata ${resource.id}-metadata ${resource.id}-metadata-all`);
             ctx.body = MetadataSerializer.serialize(result);
         } catch (err) {
             if (err instanceof MetadataDuplicated) {
@@ -70,6 +73,7 @@ class MetadataRouter {
         logger.info(`Updating metadata of ${resource.type}: ${resource.id}`);
         try {
             const result = await MetadataService.update(ctx.params.dataset, resource, ctx.request.body);
+            ctx.set('uncache', `metadata ${resource.id}-metadata ${resource.id}-metadata-all ${result.id}`);
             ctx.body = MetadataSerializer.serialize(result);
         } catch (err) {
             if (err instanceof MetadataNotFound) {
@@ -88,6 +92,7 @@ class MetadataRouter {
         if (ctx.query.language) { filter.language = ctx.query.language; }
         try {
             const result = await MetadataService.delete(ctx.params.dataset, resource, filter);
+            ctx.set('uncache', `metadata ${resource.id}-metadata ${resource.id}-metadata-all ${result.id}`);
             ctx.body = MetadataSerializer.serialize(result);
         } catch (err) {
             if (err instanceof MetadataNotFound) {
@@ -102,13 +107,23 @@ class MetadataRouter {
         logger.info('Getting all metadata');
         const filter = {};
         const extendedFilter = {};
-        filter.search = ctx.query.search ? ctx.query.search.split(',').map(elem => elem.trim()) : [];
+        filter.search = ctx.query.search ? ctx.query.search.split(' ').map(elem => elem.trim()) : [];
         if (ctx.query.application) { filter.application = ctx.query.application; }
         if (ctx.query.language) { filter.language = ctx.query.language; }
         if (ctx.query.limit) { filter.limit = ctx.query.limit; }
         if (ctx.query.type) { extendedFilter.type = ctx.query.type; }
-        const result = await MetadataService.getAll(filter, extendedFilter);
-        ctx.body = MetadataSerializer.serialize(result);
+        if (ctx.query.sort) { filter.sort = ctx.query.sort; }
+        try {
+            const result = await MetadataService.getAll(filter, extendedFilter);
+            ctx.set('cache', `metadata`);
+            ctx.body = MetadataSerializer.serialize(result);
+        } catch (err) {
+            if (err instanceof InvalidSortParameter) {
+                ctx.throw(400, err.message);
+                return;
+            }
+            throw err;
+        }
     }
 
     static async getByIds(ctx) {
@@ -121,7 +136,7 @@ class MetadataRouter {
             ids: ctx.request.body.ids
         };
         if (typeof resource.ids === 'string') {
-            resource.ids = resource.ids.split(',').map((elem) => elem.trim());
+            resource.ids = resource.ids.split(',').map(elem => elem.trim());
         }
         resource.type = MetadataRouter.getResourceTypeByPath(ctx.path);
         const filter = {};
@@ -133,11 +148,12 @@ class MetadataRouter {
 
     static async clone(ctx) {
         const resource = MetadataRouter.getResource(ctx.params);
-        const newDataset = ctx.request.body.newDataset;
+        const { newDataset } = ctx.request.body;
         logger.info(`Cloning metadata of ${resource.type}: ${resource.id} in ${newDataset}`);
         try {
             const user = ctx.request.body.loggedUser;
             const result = await MetadataService.clone(user, ctx.params.dataset, resource, ctx.request.body);
+            ctx.set('uncache', `metadata`);
             ctx.body = MetadataSerializer.serialize(result);
         } catch (err) {
             if (err instanceof MetadataDuplicated) {
