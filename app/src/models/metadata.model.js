@@ -6,6 +6,7 @@ const { RESOURCES } = require('app.constants');
 const { STATUS } = require('app.constants');
 
 const Metadata = new Schema({
+
     dataset: { type: String, required: true, trim: true },
     application: { type: String, required: true, trim: true },
     resource: {
@@ -15,19 +16,31 @@ const Metadata = new Schema({
         }
     },
     userId: { type: String, required: true, trim: true },
-    language: { type: String, required: true, trim: true },
-    name: { type: String, required: false, trim: true, index: true },
-    description: { type: String, required: false, trim: true, index: true },
-    source: { type: String, required: false, trim: true },
-    citation: { type: String, required: false, trim: true },
-    license: { type: String, required: false, trim: true },
-    units: { type: Schema.Types.Mixed },
-    info: { type: Schema.Types.Mixed },
     columns: { type: Schema.Types.Mixed },
-    applicationProperties: { type: Schema.Types.Mixed },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    status: { type: String, enum: STATUS, default: 'published' }
+    status: { type: String, enum: STATUS, default: 'published' },
+
+    name: { type: String, required: false, trim: true, index: true },
+    altName: { type: String, required: false, trim: true, index: true },
+    description: { type: String, required: true, trim: true, index: true },
+    creator: { type: Schema.Types.Mixed },
+    variableMeasured: { type: Schema.Types.Mixed },   // ----------------//replaces units
+    citation: { type: String, required: false, trim: true },
+    identifier: { type: String, required: false, trim: true },
+    keywords: [
+        { type: String, required: true, trim: true }
+    ],
+    language: { type: String, required: true, trim: true },
+    license: { type: String, required: false, trim: true },
+    spatialCoverage: { type: String, required: false, trim: true },
+    temporalCoverage: { type: String, required: false, trim: true },
+    version: { type: String, required: false, trim: true, default: '1.0.0' },
+    url: { type: String, required: false, trim: true },
+    distribution: { type: Schema.Types.Mixed },
+    info: { type: Schema.Types.Mixed }
+
+
 });
 
 Metadata.index(
