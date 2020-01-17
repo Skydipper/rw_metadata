@@ -67,12 +67,20 @@ class MetadataService {
             language: body.language,
             userId: user.id,
             name: body.name,
+            altName: body.altName,
+            creator: body.creator,
             description: body.description,
+            variableMeasured: body.variableMeasured,
             source: body.source,
             citation: body.citation,
+            identifier: body.identifier,
             license: body.license,
-            units: body.units,
             info: body.info,
+            version: body.version,
+            url: body.url,
+            spatialCoverage: body.spatialCoverage,
+            temporalCoverage: body.temporalCoverage,
+            distribution: body.distribution,
             columns: body.columns,
             applicationProperties: body.applicationProperties
         });
@@ -103,6 +111,15 @@ class MetadataService {
         }
         logger.debug('Updating metadata');
         metadata.name = body.name ? body.name : metadata.name;
+        metadata.altName = body.altName ? body.altName : metadata.altName;
+        metadata.creator = body.creator ? body.creator : metadata.creator;
+        metadata.variableMeasured = body.variableMeasured ? body.variableMeasured : metadata.variableMeasured;
+        metadata.identifier = body.identifier ? body.identifier : metadata.identifier;
+        metadata.version = body.version ? body.version : metadata.version;
+        metadata.url = body.url ? body.url : metadata.url;
+        metadata.spatialCoverage = body.spatialCoverage ? body.spatialCoverage : metadata.spatialCoverage;
+        metadata.temporalCoverage = body.temporalCoverage ? body.temporalCoverage : metadata.temporalCoverage;
+        metadata.distribution = body.distribution ? body.distribution : metadata.distribution;
         metadata.description = body.description ? body.description : metadata.description;
         metadata.source = body.source ? body.source : metadata.source;
         metadata.citation = body.citation ? body.citation : metadata.citation;
