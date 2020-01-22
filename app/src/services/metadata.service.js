@@ -76,6 +76,7 @@ class MetadataService {
             identifier: body.identifier,
             license: body.license,
             info: body.info,
+            dataLineage: body.dataLineage,
             version: body.version,
             url: body.url,
             spatialCoverage: body.spatialCoverage,
@@ -125,6 +126,7 @@ class MetadataService {
         metadata.citation = body.citation ? body.citation : metadata.citation;
         metadata.license = body.license ? body.license : metadata.license;
         metadata.info = body.info ? body.info : metadata.info;
+        metadata.dataLineage = body.dataLineage ? body.dataLineage : metadata.dataLineage;
         metadata.columns = body.columns ? body.columns : metadata.columns;
         metadata.applicationProperties = body.applicationProperties ? body.applicationProperties : metadata.applicationProperties;
         metadata.updatedAt = new Date();

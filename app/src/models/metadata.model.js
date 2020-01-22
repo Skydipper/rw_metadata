@@ -21,15 +21,15 @@ const Metadata = new Schema({
     updatedAt: { type: Date, default: Date.now },
     status: { type: String, enum: STATUS, default: 'published' },
 
-    name: { type: String, required: false, trim: true, index: true },
+    name: { type: String, required: true, trim: true, index: true },
     altName: { type: String, required: false, trim: true, index: true },
-    description: { type: String, required: true, trim: true, index: true },
+    description: { type: String, required: true, trim: true },
     creator: { type: Schema.Types.Mixed },
-    variableMeasured: { type: Schema.Types.Mixed },   // ----------------//replaces units
+    variableMeasured: { type: Schema.Types.Mixed },
     citation: { type: String, required: false, trim: true },
     identifier: { type: String, required: false, trim: true },
     keywords: [
-        { type: String, required: true, trim: true }
+        { type: String, required: false, trim: true }
     ],
     language: { type: String, required: true, trim: true },
     license: { type: String, required: false, trim: true },
@@ -38,7 +38,8 @@ const Metadata = new Schema({
     version: { type: String, required: false, trim: true, default: '1.0.0' },
     url: { type: String, required: false, trim: true },
     distribution: { type: Schema.Types.Mixed },
-    info: { type: Schema.Types.Mixed }
+    info: { type: Schema.Types.Mixed },
+    dataLineage: { type: Schema.Types.Mixed }
 
 
 });

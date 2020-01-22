@@ -82,11 +82,12 @@ class MetadataValidator {
 
     static validate(koaObj) {
         logger.info('Validating Metadata Creation');
+        logger.info('\n\n\n VALIDATOR \n\n\n', koaObj);
         koaObj.checkBody('language').notEmpty().toLow();
         koaObj.checkBody('application').notEmpty().check(application => MetadataValidator.notEmptyString(application));
-        koaObj.checkBody('name').optional().check(name => MetadataValidator.notEmptyString(name), '"name" should be a valid string');
+        koaObj.checkBody('name').notEmpty().check(name => MetadataValidator.notEmptyString(name), '"name" should be a valid string. Required property.');
         koaObj.checkBody('altName').optional().check(altName => MetadataValidator.notEmptyString(altName), '"altName" should be a valid string');
-        koaObj.checkBody('description').notEmpty().check(description => MetadataValidator.notEmptyString(description), '"description" should be a valid string');
+        koaObj.checkBody('description').notEmpty().check(description => MetadataValidator.notEmptyString(description), '"description" should be a valid string. Required property.');
         koaObj.checkBody('creator').optional().check((creator) => {
             if (MetadataValidator.isObject(creator)) {
                 return true;
@@ -103,7 +104,7 @@ class MetadataValidator {
         koaObj.checkBody('citation').optional().check(citation => MetadataValidator.notEmptyString(citation), '"citation" should be a valid string');
         koaObj.checkBody('license').optional().check(license => MetadataValidator.notEmptyString(license), '"license" should be a valid string');
         koaObj.checkBody('identifier').optional().check(identifier => MetadataValidator.notEmptyString(identifier), '"identifier" should be a valid string');
-        koaObj.checkBody('keywords').notEmpty().check(keywords => MetadataValidator.isStringArray(keywords), '"keywords" should be a valid array of strings');
+        koaObj.checkBody('keywords').optional().check(keywords => MetadataValidator.isStringArray(keywords), '"keywords" should be a valid array of strings');
         koaObj.checkBody('spatialCoverage').optional().check(spatialCoverage => MetadataValidator.notEmptyString(spatialCoverage), '"spatialCoverage" should be a valid string');
         koaObj.checkBody('temporalCoverage').optional().check(temporalCoverage => MetadataValidator.notEmptyString(temporalCoverage), '"temporalCoverage" should be a valid string');
         koaObj.checkBody('version').optional().check(version => MetadataValidator.notEmptyString(version), '"version" should be a valid string');
@@ -122,6 +123,12 @@ class MetadataValidator {
         }, 'should be a valid object');
         koaObj.checkBody('info').optional().check((info) => {
             if (MetadataValidator.isObject(info)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object');
+        koaObj.checkBody('dataLineage').optional().check((dataLineage) => {
+            if (MetadataValidator.isObject(dataLineage)) {
                 return true;
             }
             return false;

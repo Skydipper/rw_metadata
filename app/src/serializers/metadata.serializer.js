@@ -28,6 +28,7 @@ class MetadataSerializer {
                         license: el.license,
                         variableMeasured: el.variableMeasured,
                         info: el.info,
+                        dataLineage: el.dataLineage,
                         columns: el.columns,
                         applicationProperties: el.applicationProperties,
                         createdAt: el.createdAt,
