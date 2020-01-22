@@ -21,24 +21,24 @@ const Metadata = new Schema({
     updatedAt: { type: Date, default: Date.now },
     status: { type: String, enum: STATUS, default: 'published' },
     name: { type: String, required: true, trim: true, index: true },
-    altName: { type: String, required: false, trim: true, index: true },
+    altName: { type: String, required: false, trim: true, index: true, default: null },
     description: { type: String, required: true, trim: true },
-    creator: { type: Schema.Types.Mixed },
-    variableMeasured: { type: Schema.Types.Mixed },
-    citation: { type: String, required: false, trim: true },
-    identifier: { type: String, required: false, trim: true },
+    creator: { type: Schema.Types.Mixed, default: null },
+    variableMeasured: { type: Schema.Types.Mixed, default: null },
+    citation: { type: String, required: false, trim: true, default: null },
+    identifier: { type: String, required: false, trim: true, default: null },
     keywords: [
         { type: String, required: true, trim: true }
     ],
     language: { type: String, required: false, trim: true, default: 'en' },
     license: { type: String, required: true, trim: true },
-    spatialCoverage: { type: Schema.Types.Mixed },
-    temporalCoverage: { type: Schema.Types.Mixed },
+    spatialCoverage: { type: Schema.Types.Mixed, default: null },
+    temporalCoverage: { type: Schema.Types.Mixed, default: null },
     version: { type: String, required: false, trim: true, default: '1.0.0' },
-    url: { type: String, required: false, trim: true },
-    distribution: { type: Schema.Types.Mixed },
-    info: { type: Schema.Types.Mixed },
-    dataLineage: { type: Schema.Types.Mixed }
+    url: { type: String, required: false, trim: true, default: null },
+    distribution: { type: Schema.Types.Mixed, default: null },
+    info: { type: Schema.Types.Mixed, default: {} },
+    dataLineage: { type: Schema.Types.Mixed, default: null }
 
 
 });
