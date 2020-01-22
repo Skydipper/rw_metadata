@@ -20,7 +20,6 @@ const Metadata = new Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     status: { type: String, enum: STATUS, default: 'published' },
-
     name: { type: String, required: true, trim: true, index: true },
     altName: { type: String, required: false, trim: true, index: true },
     description: { type: String, required: true, trim: true },
@@ -29,12 +28,12 @@ const Metadata = new Schema({
     citation: { type: String, required: false, trim: true },
     identifier: { type: String, required: false, trim: true },
     keywords: [
-        { type: String, required: false, trim: true }
+        { type: String, required: true, trim: true }
     ],
-    language: { type: String, required: true, trim: true },
-    license: { type: String, required: false, trim: true },
-    spatialCoverage: { type: String, required: false, trim: true },
-    temporalCoverage: { type: String, required: false, trim: true },
+    language: { type: String, required: false, trim: true, default: 'en' },
+    license: { type: String, required: true, trim: true },
+    spatialCoverage: { type: Schema.Types.Mixed },
+    temporalCoverage: { type: Schema.Types.Mixed },
     version: { type: String, required: false, trim: true, default: '1.0.0' },
     url: { type: String, required: false, trim: true },
     distribution: { type: Schema.Types.Mixed },
