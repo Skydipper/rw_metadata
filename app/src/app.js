@@ -78,7 +78,7 @@ app.use(async (ctx, next) => {
         try {
             error = JSON.parse(inErr);
         } catch (e) {
-            logger.debug('Could not parse error message - is it JSON?: ', inErr);
+            logger.debug(`Could not parse error message - is it JSON?:  ${inErr}`);
             error = inErr;
         }
         ctx.status = error.status || ctx.status || 500;

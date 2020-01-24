@@ -13,6 +13,8 @@ API](http://gfw-api.github.io/swagger-ui/?url=https://raw.githubusercontent.com/
 
 ### Metadata Entity
 
+Metadata schema is based upon the [Dataset standard](https://developers.google.com/search/docs/data-types/dataset).
+
 ```
 dataset: <String>, required
 application: <String>, required
@@ -21,12 +23,24 @@ resource: {
     type: <String>, required, [dataset, widget, layer]
 },
 language: <String>, required
-name: <String>
-description: <String>
+name: <String>, required
+altName: <String>
+description: <String>, required
+keywords: <Array>, required
+creator: <String>
+license: <String>
 source: <String>
+url: <String>
 citation: <String>
 license: <String>
+distribution: <Object>
+identifier: <String>
+variableMeasured: <Object> or <String>
 units: <Object>
+version: <String>
+spatialCoverage: <Object> or <String>
+temporalCoverage: <Object> or <String>
+dataLineage: <Object> or <String>
 info: <Object>
 fields: <Object>
 createdAt: <Date>

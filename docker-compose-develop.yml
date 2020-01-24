@@ -2,7 +2,7 @@ develop:
   extends:
     file: base.yml
     service: base
-  container_name: rw-metadata-develop
+  container_name: metadata-develop
   environment:
     CT_REGISTER_MODE: auto
     NODE_ENV: dev
@@ -13,15 +13,15 @@ develop:
   links:
     - mongo
   volumes:
-    - ./app:/opt/rw-metadata/app
+    - ./app:/opt/metadata/app
 mongo:
   image: mongo:3.4
-  container_name: rw-metadata-mongo-develop
+  container_name: metadata-mongo-develop
   command: --smallfiles
   ports:
     - "27017"
   volumes:
     # in osx the host machine volume directory cannot be under /Users
     # http://stackoverflow.hex1.ru/questions/34390220/how-to-mount-external-volume-for-mongodb-using-docker-compose-and-docker-machine
-    - $HOME/docker/data/rw-metadata:/data/db
+    - $HOME/docker/data/metadata:/data/db
   restart: always

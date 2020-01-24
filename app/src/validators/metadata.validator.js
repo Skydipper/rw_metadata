@@ -13,6 +13,17 @@ class MetadataValidator {
         return false;
     }
 
+    static isStringArray(property) {
+        if (property instanceof Array) {
+            const invalid = property.filter((str) => {
+                const regex = RegExp(/^[a-zA-Z0-9\u00C0-\u024F\u1E00-\u1EFF_ ]*$/i);
+                return (typeof str !== 'string' || !regex.test(str));
+            });
+            return (invalid.length === 0);
+        }
+        return false;
+    }
+
     static isString(property) {
         if (typeof property === 'string' && property.length >= 0) {
             return true;
@@ -71,25 +82,66 @@ class MetadataValidator {
 
     static validate(koaObj) {
         logger.info('Validating Metadata Creation');
-        koaObj.checkBody('language').notEmpty().toLow();
+        koaObj.checkBody('language').optional().toLow().check(language => MetadataValidator.notEmptyString(language), 'should be a valid string');
         koaObj.checkBody('application').notEmpty().check(application => MetadataValidator.notEmptyString(application));
-        koaObj.checkBody('name').optional().check(name => MetadataValidator.isString(name), 'should be a valid string');
-        koaObj.checkBody('description').optional().check(description => MetadataValidator.isString(description), 'should be a valid string');
-        koaObj.checkBody('source').optional().check(source => MetadataValidator.isString(source), 'should be a valid string');
-        koaObj.checkBody('citation').optional().check(citation => MetadataValidator.isString(citation), 'should be a valid string');
-        koaObj.checkBody('license').optional().check(license => MetadataValidator.isString(license), 'should be a valid string');
-        koaObj.checkBody('units').optional().check((units) => {
-            if (MetadataValidator.isObject(units)) {
+        koaObj.checkBody('name').notEmpty().check(name => MetadataValidator.notEmptyString(name), 'should be a valid string. Required property.');
+        koaObj.checkBody('altName').optional().check(altName => MetadataValidator.notEmptyString(altName), 'should be a valid string');
+        koaObj.checkBody('description').notEmpty().check(description => MetadataValidator.notEmptyString(description), 'should be a valid string. Required property.');
+        koaObj.checkBody('creator').optional().check((creator) => {
+            if (MetadataValidator.isObject(creator)) {
                 return true;
             }
             return false;
         }, 'should be a valid object');
+        koaObj.checkBody('variableMeasured').optional().check((variableMeasured) => {
+            if (MetadataValidator.isObject(variableMeasured) || MetadataValidator.notEmptyString(variableMeasured)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object');
+        koaObj.checkBody('source').optional().check(source => MetadataValidator.notEmptyString(source), 'should be a valid string');
+        koaObj.checkBody('citation').optional().check(citation => MetadataValidator.notEmptyString(citation), 'should be a valid string');
+        koaObj.checkBody('license').notEmpty().check(license => MetadataValidator.notEmptyString(license), 'should be a valid string. Required property.');
+        koaObj.checkBody('identifier').optional().check(identifier => MetadataValidator.notEmptyString(identifier), 'should be a valid string');
+        koaObj.checkBody('keywords').notEmpty().check(keywords => MetadataValidator.isStringArray(keywords), 'should be a valid array of strings. Required property.');
+        koaObj.checkBody('version').optional().check(version => MetadataValidator.notEmptyString(version), 'should be a valid string');
+        koaObj.checkBody('url').optional().check(url => MetadataValidator.notEmptyString(url), 'should be a valid string');
+        koaObj.checkBody('spatialCoverage').optional().check((spatialCoverage) => {
+            if (MetadataValidator.isObject(spatialCoverage) || MetadataValidator.notEmptyString(spatialCoverage)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object or string');
+        koaObj.checkBody('temporalCoverage').optional().check((temporalCoverage) => {
+            if (MetadataValidator.isObject(temporalCoverage) || MetadataValidator.notEmptyString(temporalCoverage)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object or string');
+        koaObj.checkBody('distribution').optional().check((distribution) => {
+            if (MetadataValidator.isObject(distribution) || MetadataValidator.notEmptyString(distribution)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object or string');
+        koaObj.checkBody('units').optional().check((units) => {
+            if (MetadataValidator.isObject(units) || MetadataValidator.notEmptyString(units)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object or string');
         koaObj.checkBody('info').optional().check((info) => {
             if (MetadataValidator.isObject(info)) {
                 return true;
             }
             return false;
         }, 'should be a valid object');
+        koaObj.checkBody('dataLineage').optional().check((dataLineage) => {
+            if (MetadataValidator.isObject(dataLineage) || MetadataValidator.notEmptyString(dataLineage)) {
+                return true;
+            }
+            return false;
+        }, 'should be a valid object or string');
         koaObj.checkBody('columns').optional().check((columns) => {
             if (MetadataValidator.isObject(columns)) {
                 return true;
