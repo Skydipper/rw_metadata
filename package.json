@@ -53,7 +53,7 @@
     "koa-validate": "1.0.7",
     "lodash": "4.17.13",
     "migrate-mongoose": "^3.2.2",
-    "mongoose": "5.8.9",
+    "mongoose": "5.4.11",
     "sd-ct-register-microservice-node": "^2.1.7"
   },
   "devDependencies": {
