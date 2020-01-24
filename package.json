@@ -1,7 +1,7 @@
 {
   "name": "metadata",
   "version": "2.3.0",
-  "description": "Resource Watch - Metadata",
+  "description": "Metadata Service",
   "main": "index.js",
   "scripts": {
     "coverage": "NODE_PATH=app/src node $NODE_DEBUG_OPTION ./node_modules/.bin/grunt --gruntfile app/Gruntfile.js nyc",
