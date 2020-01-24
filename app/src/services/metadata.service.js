@@ -47,7 +47,8 @@ class MetadataService {
     }
 
     static async create(user, dataset, resource, body) {
-        logger.debug('Checking if metadata exists');
+        //logger.debug(`Checking if metadata exists: ${user},\n ${dataset},\n ${resource},\n ${body} `);
+        logger.debug(`Checking if ${dataset} exists..`)
         const currentMetadata = await Metadata.findOne({
             dataset,
             'resource.id': resource.id,
