@@ -36,6 +36,7 @@ class MetadataSerializer {
                         creator: el.creator,
                         source: el.source,
                         identifier: el.identifier,
+                        keywords: el.keywords,
                         version: el.version,
                         url: el.url,
                         distribution: el.distribution,
