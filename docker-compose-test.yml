@@ -2,7 +2,7 @@ test:
   extends:
     file: base.yml
     service: base
-  container_name: metadata-develop
+  container_name: metadata-test
   environment:
     CT_REGISTER_MODE: auto
     NODE_ENV: test
