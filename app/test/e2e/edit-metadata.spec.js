@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars,no-undef */
 const nock = require('nock');
 const chai = require('chai');
+const logger = require('logger');
+
 const Metadata = require('models/metadata.model');
 const {
     ROLES
@@ -53,7 +55,6 @@ describe('EDIT METADATA:', () => {
 
         validateMetadata(createdDatasetTwo, fakeMetadataTwo);
     });
-
     it('Update metadata for a dataset', async () => {
         const response = await requester
             .patch(`/api/v1/dataset/${fakeMetadataOne.dataset}/metadata`)

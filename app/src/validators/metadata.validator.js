@@ -85,10 +85,11 @@ class MetadataValidator {
         koaObj.checkBody('language').optional().toLow().check(language => MetadataValidator.notEmptyString(language), 'should be a valid string');
         koaObj.checkBody('application').notEmpty().check(application => MetadataValidator.notEmptyString(application));
         koaObj.checkBody('name').notEmpty().check(name => MetadataValidator.notEmptyString(name), 'should be a valid string. Required property.');
+        koaObj.checkBody('status').notEmpty().check(status => MetadataValidator.notEmptyString(status), 'should be a valid string. Required property.');
         koaObj.checkBody('altName').optional().check(altName => MetadataValidator.notEmptyString(altName), 'should be a valid string');
         koaObj.checkBody('description').notEmpty().check(description => MetadataValidator.notEmptyString(description), 'should be a valid string. Required property.');
         koaObj.checkBody('creator').optional().check((creator) => {
-            if (MetadataValidator.isObject(creator)) {
+            if (MetadataValidator.isObject(creator) || MetadataValidator.notEmptyString(variableMeasured)) {
                 return true;
             }
             return false;
@@ -120,12 +121,6 @@ class MetadataValidator {
         }, 'should be a valid object or string');
         koaObj.checkBody('distribution').optional().check((distribution) => {
             if (MetadataValidator.isObject(distribution) || MetadataValidator.notEmptyString(distribution)) {
-                return true;
-            }
-            return false;
-        }, 'should be a valid object or string');
-        koaObj.checkBody('units').optional().check((units) => {
-            if (MetadataValidator.isObject(units) || MetadataValidator.notEmptyString(units)) {
                 return true;
             }
             return false;
