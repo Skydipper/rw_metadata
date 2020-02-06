@@ -19,7 +19,7 @@ const Metadata = new Schema({
     columns: { type: Schema.Types.Mixed },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    status: { type: String, enum: STATUS, default: 'published' },
+    status: { type: String, required: false, enum: STATUS, default: 'published' },
     name: { type: String, required: true, trim: true, index: true },
     altName: { type: String, required: false, trim: true, index: true, default: null },
     description: { type: String, required: true, trim: true },
