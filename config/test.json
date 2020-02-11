@@ -10,8 +10,8 @@
     },
 
     "mongodb":{
-        "database": "metadata_db_test",
-        "host": "localhost",
+        "database": "metadata_db_test_test",
+        "host": "http://mymachine",
         "port": 27017
     }
 }
