@@ -6,6 +6,14 @@ const InvalidSortParameter = require('errors/invalidSortParameter.error');
 
 class MetadataService {
 
+    static getSearchedValue(val) {
+        if (val.split(',').length > 1) {
+            return val.split(',');
+        }
+
+        return val;
+    }
+
     static getFilter(filter) {
         let finalFilter = {};
         if (filter && filter.application) {
@@ -31,7 +39,26 @@ class MetadataService {
             }
             finalFilter = tempFilter;
         }
+
+        if (filter.searchOR && Object.keys(filter.searchOR).length > 0) {
+            finalFilter.$or = [];
+
+            // eslint-disable-next-line no-return-assign
+            Object.keys(filter.searchOR).map(key => finalFilter.$or.push({ [key]: this.getSearchedValue(filter.searchOR[key]) }));
+        }
+
+        if (filter.searchPhrase) {
+            return { $text: { $search: filter.searchPhrase } };
+        }
+
         return finalFilter;
+    }
+
+    static async search(filter) {
+        const finalQuery = MetadataService.getFilter(filter);
+        const limit = (Number.isNaN(parseInt(filter.limit, 10))) ? 0 : parseInt(filter.limit, 10);
+        logger.info(`Getting metadata with query: ${JSON.stringify(finalQuery)}`);
+        return Metadata.find(finalQuery).limit(limit).exec();
     }
 
     static async get(dataset, resource, filter) {
@@ -76,6 +103,7 @@ class MetadataService {
             identifier: body.identifier,
             license: body.license,
             info: body.info,
+            status: body.status,
             dataLineage: body.dataLineage,
             version: body.version,
             url: body.url,
@@ -126,6 +154,7 @@ class MetadataService {
         metadata.citation = body.citation ? body.citation : metadata.citation;
         metadata.license = body.license ? body.license : metadata.license;
         metadata.info = body.info ? body.info : metadata.info;
+        metadata.status = body.status ? body.status : metadata.status;
         metadata.dataLineage = body.dataLineage ? body.dataLineage : metadata.dataLineage;
         metadata.columns = body.columns ? body.columns : metadata.columns;
         metadata.applicationProperties = body.applicationProperties ? body.applicationProperties : metadata.applicationProperties;

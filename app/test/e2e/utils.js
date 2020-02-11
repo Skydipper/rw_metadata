@@ -1,3 +1,5 @@
+const Metadata = require('models/metadata.model');
+
 const { ROLES } = require('./test.constants');
 
 function deserializeDataset(response) {
@@ -40,10 +42,10 @@ function validateMetadata(actual, expected) {
 
 const getUUID = () => Math.random().toString(36).substring(7);
 
-const createMetadata = () => {
+const createMetadata = (metadata) => {
     const uuid = getUUID();
 
-    return {
+    return Object.assign({}, {
         dataset: uuid,
         application: 'rw',
         resource: {
@@ -87,12 +89,15 @@ const createMetadata = () => {
         keywords: ['foo', 'bar'],
         createdAt: new Date(),
         updatedAt: new Date(),
-        status: 'published'
-    };
+        status: 'published',
+    }, metadata);
 };
+
+const createMetadataInDB = (metadata = {}) => new Metadata(createMetadata(metadata)).save();
 
 module.exports = {
     deserializeDataset,
     validateMetadata,
-    createMetadata
+    createMetadata,
+    createMetadataInDB,
 };
