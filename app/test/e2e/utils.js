@@ -100,5 +100,4 @@ module.exports = {
     validateMetadata,
     createMetadata,
     createMetadataInDB,
-    ensureCorrectError
 };
