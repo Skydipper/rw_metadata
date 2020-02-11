@@ -52,16 +52,7 @@ Metadata.index(
     }, {
         name: 'TextIndex',
         default_language: 'english',
-        language_override: 'none',
-        weights:
-            {
-                url: 6,
-                application: 5,
-                language: 4,
-                altName: 3,
-                name: 2,
-                description: 1
-            }
+        language_override: 'none'
     }
 );
 
