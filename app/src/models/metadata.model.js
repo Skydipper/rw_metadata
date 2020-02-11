@@ -55,8 +55,4 @@ Metadata.index(
     }
 );
 
-const test = mongoose.model('Metadata', Metadata);
-
-test.collection.dropIndexes();
-
-module.exports = test;
+module.exports = mongoose.model('Metadata', Metadata);
