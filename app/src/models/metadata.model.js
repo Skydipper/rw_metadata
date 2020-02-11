@@ -6,7 +6,6 @@ const { RESOURCES } = require('app.constants');
 const { STATUS } = require('app.constants');
 
 const Metadata = new Schema({
-
     dataset: { type: String, required: true, trim: true },
     application: { type: String, required: true, trim: true },
     resource: {
@@ -56,4 +55,8 @@ Metadata.index(
     }
 );
 
-module.exports = mongoose.model('Metadata', Metadata);
+const test = mongoose.model('Metadata', Metadata);
+
+test.collection.dropIndexes();
+
+module.exports = test;
