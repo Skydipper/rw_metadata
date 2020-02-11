@@ -6,6 +6,14 @@ const InvalidSortParameter = require('errors/invalidSortParameter.error');
 
 class MetadataService {
 
+    static getSearchedValue(val) {
+        if (val.split(',').length > 1) {
+            return val.split(',');
+        }
+
+        return val;
+    }
+
     static getFilter(filter) {
         let finalFilter = {};
         if (filter && filter.application) {
@@ -31,14 +39,25 @@ class MetadataService {
             }
             finalFilter = tempFilter;
         }
+
+        if (filter.searchOR && Object.keys(filter.searchOR).length > 0) {
+            finalFilter.$or = [];
+
+            // eslint-disable-next-line no-return-assign
+            Object.keys(filter.searchOR).map(key => finalFilter.$or.push({ [key]: this.getSearchedValue(filter.searchOR[key]) }));
+        }
+
+        if (filter.searchPhrase) {
+            return { $text: { $search: filter.searchPhrase } };
+        }
+
         return finalFilter;
     }
 
     static async search(filter) {
-        const query = {};
-        const finalQuery = Object.assign(query, MetadataService.getFilter(filter));
+        const finalQuery = MetadataService.getFilter(filter);
         const limit = (Number.isNaN(parseInt(filter.limit, 10))) ? 0 : parseInt(filter.limit, 10);
-        logger.info(`Getting metadata with query: ${finalQuery}`);
+        logger.info(`Getting metadata with query: ${JSON.stringify(finalQuery)}`);
         return Metadata.find(finalQuery).limit(limit).exec();
     }
 

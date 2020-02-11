@@ -14,33 +14,35 @@ const { USER_ROLES } = require('app.constants');
 const router = new Router();
 
 class MetadataRouter {
-    
+
     static async search(ctx) {
         logger.info(`Searching metadata...`);
         let filter = {};
         const phrase = ctx.query.phrase || null;
-        if (ctx.query){
-            filter = MetadataRouter.getSearchFilters(ctx.query)
+        if (ctx.query) {
+            filter.searchOR = MetadataRouter.getSearchFilters(ctx.query);
             logger.info(`Searching metadata by keys ${Object.keys(filter)}`);
         }
-        if (phrase) { 
+        if (ctx.query && ctx.query.limit) {
+            filter.limit = ctx.query.limit;
+        }
+        if (phrase) {
             logger.info(`Searching metadata with phrase ${phrase}`);
-            filter.search = JSON.parse(phrase)
-        } 
+            filter.searchPhrase = phrase;
+        }
         const result = await MetadataService.search(filter);
         logger.info(`Searching result: ${result}`);
         ctx.body = MetadataSerializer.serialize(result);
     }
 
     static getSearchFilters(params) {
-        let resource = {};
+        const resource = {};
         if (params.name) { resource.name = params.name; }
-        if (params.altName) { resource.altName = params.altName }
-        if (params.description) { resource.description = params.description }
-        if (params.app) { resource.application = params.app }
-        if (params.url) { resource.url = params.url }
-        if (params.language) { resource.language = params.language }
-        if (params.limit) { filter.limit = params.limit; }
+        if (params.altName) { resource.altName = params.altName; }
+        if (params.description) { resource.description = params.description; }
+        if (params.app) { resource.application = params.app; }
+        if (params.url) { resource.url = params.url; }
+        if (params.language) { resource.language = params.language; }
         return resource;
     }
 

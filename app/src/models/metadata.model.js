@@ -39,14 +39,16 @@ const Metadata = new Schema({
     distribution: { type: Schema.Types.Mixed, default: null },
     info: { type: Schema.Types.Mixed, default: {} },
     dataLineage: { type: Schema.Types.Mixed, default: null }
-
-
 });
 
 Metadata.index(
     {
         name: 'text',
         description: 'text',
+        altName: 'text',
+        language: 'text',
+        application: 'text',
+        url: 'text',
     }, {
         name: 'TextIndex',
         default_language: 'english',
