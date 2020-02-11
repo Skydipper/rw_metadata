@@ -15,6 +15,37 @@ const router = new Router();
 
 class MetadataRouter {
 
+    static async search(ctx) {
+        logger.info(`Searching metadata...`);
+        let filter = {};
+        const phrase = ctx.query.phrase || null;
+        if (ctx.query) {
+            filter.searchOR = MetadataRouter.getSearchFilters(ctx.query);
+            logger.info(`Searching metadata by keys ${Object.keys(filter)}`);
+        }
+        if (ctx.query && ctx.query.limit) {
+            filter.limit = ctx.query.limit;
+        }
+        if (phrase) {
+            logger.info(`Searching metadata with phrase ${phrase}`);
+            filter.searchPhrase = phrase;
+        }
+        const result = await MetadataService.search(filter);
+        logger.info(`Searching result: ${result}`);
+        ctx.body = MetadataSerializer.serialize(result);
+    }
+
+    static getSearchFilters(params) {
+        const resource = {};
+        if (params.name) { resource.name = params.name; }
+        if (params.altName) { resource.altName = params.altName; }
+        if (params.description) { resource.description = params.description; }
+        if (params.app) { resource.application = params.app; }
+        if (params.url) { resource.url = params.url; }
+        if (params.language) { resource.language = params.language; }
+        return resource;
+    }
+
     static getResource(params) {
         let resource = { id: params.dataset, type: 'dataset' };
         if (params.layer) {
@@ -234,6 +265,8 @@ const cloneValidationMiddleware = async (ctx, next) => {
     await next();
 };
 
+// search
+router.get('/search', MetadataRouter.search);
 // dataset
 router.get('/dataset/:dataset/metadata', MetadataRouter.get);
 router.post('/dataset/:dataset/metadata', validationMiddleware, authorizationMiddleware, MetadataRouter.create);

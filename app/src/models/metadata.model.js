@@ -19,7 +19,7 @@ const Metadata = new Schema({
     columns: { type: Schema.Types.Mixed },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    status: { type: String, enum: STATUS, default: 'published' },
+    status: { type: String, required: false, enum: STATUS, default: 'published' },
     name: { type: String, required: true, trim: true, index: true },
     altName: { type: String, required: false, trim: true, index: true, default: null },
     description: { type: String, required: true, trim: true },
@@ -39,14 +39,16 @@ const Metadata = new Schema({
     distribution: { type: Schema.Types.Mixed, default: null },
     info: { type: Schema.Types.Mixed, default: {} },
     dataLineage: { type: Schema.Types.Mixed, default: null }
-
-
 });
 
 Metadata.index(
     {
         name: 'text',
         description: 'text',
+        altName: 'text',
+        language: 'text',
+        application: 'text',
+        url: 'text',
     }, {
         name: 'TextIndex',
         default_language: 'english',
