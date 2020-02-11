@@ -12,6 +12,9 @@ const MigrateMongoose = require('migrate-mongoose');
 
 const mongoUri = process.env.MONGO_URI || `mongodb://${config.get('mongodb.host')}:${config.get('mongodb.port')}/${config.get('mongodb.database')}`;
 
+console.log("test-----", mongoUri);
+console.log("proccess env", process.env.MONGO_URI);
+
 const koaBody = require('koa-body')({
     multipart: true,
     jsonLimit: '50mb',
