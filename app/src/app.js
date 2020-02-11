@@ -9,6 +9,7 @@ mongoose.Promise = require('bluebird');
 const ctRegisterMicroservice = require('sd-ct-register-microservice-node');
 const ErrorSerializer = require('serializers/error.serializer');
 const MigrateMongoose = require('migrate-mongoose');
+const Metadata = require('models/metadata.model');
 
 const mongoUri = process.env.MONGO_URI || `mongodb://${config.get('mongodb.host')}:${config.get('mongodb.port')}/${config.get('mongodb.database')}`;
 

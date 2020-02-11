@@ -55,6 +55,10 @@ Metadata.index(
         language_override: 'none',
         weights:
             {
+                url: 6,
+                application: 5,
+                language: 4,
+                altName: 3,
                 name: 2,
                 description: 1
             }
