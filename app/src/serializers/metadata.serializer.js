@@ -21,7 +21,7 @@ class MetadataSerializer {
                         resource: el.resource,
                         language: el.language,
                         name: el.name,
-                        altName: el.altName,
+                        altName: el.altName || '',
                         description: el.description,
                         source: el.source,
                         citation: el.citation,
