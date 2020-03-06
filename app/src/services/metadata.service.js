@@ -102,6 +102,7 @@ class MetadataService {
             citation: body.citation,
             identifier: body.identifier,
             license: body.license,
+            keywords: body.keywords,
             info: body.info,
             status: body.status,
             dataLineage: body.dataLineage,
@@ -152,6 +153,7 @@ class MetadataService {
         metadata.description = body.description ? body.description : metadata.description;
         metadata.source = body.source ? body.source : metadata.source;
         metadata.citation = body.citation ? body.citation : metadata.citation;
+        metadata.keywords = body.keywords ? body.keywords : metadata.keywords;
         metadata.license = body.license ? body.license : metadata.license;
         metadata.info = body.info ? body.info : metadata.info;
         metadata.status = body.status ? body.status : metadata.status;
