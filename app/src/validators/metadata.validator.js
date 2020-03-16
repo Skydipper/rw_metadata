@@ -96,7 +96,7 @@ class MetadataValidator {
         koaObj.checkBody('altName').optional().check(altName => MetadataValidator.isStringType(altName), 'should be a valid string');
         koaObj.checkBody('description').notEmpty().check(description => MetadataValidator.notEmptyString(description), 'should be a valid string. Required property.');
         koaObj.checkBody('creator').optional().check((creator) => {
-            if (MetadataValidator.isObject(creator) || MetadataValidator.notEmptyString(variableMeasured)) {
+            if (MetadataValidator.isObject(creator) || MetadataValidator.notEmptyString(creator)) {
                 return true;
             }
             return false;
