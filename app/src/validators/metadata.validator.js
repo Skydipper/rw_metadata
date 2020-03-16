@@ -38,6 +38,13 @@ class MetadataValidator {
         return false;
     }
 
+    static isStringType(property) {
+        if (typeof property === 'string') {
+            return true;
+        }
+        return false;
+    }
+
     static isObject(property) {
         if (property instanceof Object && property.length === undefined) {
             return true;
@@ -86,7 +93,7 @@ class MetadataValidator {
         koaObj.checkBody('application').notEmpty().check(application => MetadataValidator.notEmptyString(application), 'should be a valid string');
         koaObj.checkBody('name').notEmpty().check(name => MetadataValidator.notEmptyString(name), 'should be a valid string. Required property.');
         koaObj.checkBody('status').optional().check(status => MetadataValidator.notEmptyString(status), 'should be a valid string. Required property.');
-        koaObj.checkBody('altName').optional().check(altName => MetadataValidator.notEmptyString(altName), 'should be a valid string');
+        koaObj.checkBody('altName').optional().check(altName => MetadataValidator.isStringType(altName), 'should be a valid string');
         koaObj.checkBody('description').notEmpty().check(description => MetadataValidator.notEmptyString(description), 'should be a valid string. Required property.');
         koaObj.checkBody('creator').optional().check((creator) => {
             if (MetadataValidator.isObject(creator) || MetadataValidator.notEmptyString(variableMeasured)) {
