@@ -20,7 +20,7 @@ class MetadataRouter {
         let filter = {};
         const phrase = ctx.query.phrase || null;
         if (ctx.query) {
-            filter.searchOR = MetadataRouter.getSearchFilters(ctx.query);
+            filter.condition = MetadataRouter.getSearchFilters(ctx.query);
             logger.info(`Searching metadata by keys ${Object.keys(filter)}`);
         }
         if (ctx.query && ctx.query.limit) {

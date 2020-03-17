@@ -8,10 +8,10 @@ class MetadataService {
 
     static getSearchedValue(val) {
         if (val.split(',').length > 1) {
-            return val.split(',');
+            return `.*${val.replace(',', '|')}.*`;
         }
 
-        return val;
+        return `.*${val}.*`;
     }
 
     static getFilter(filter) {
@@ -40,11 +40,10 @@ class MetadataService {
             finalFilter = tempFilter;
         }
 
-        if (filter.searchOR && Object.keys(filter.searchOR).length > 0) {
-            finalFilter.$or = [];
-
+        if (filter.condition && Object.keys(filter.condition).length > 0) {
+            finalFilter = {};
             // eslint-disable-next-line no-return-assign
-            Object.keys(filter.searchOR).map(key => finalFilter.$or.push({ [key]: this.getSearchedValue(filter.searchOR[key]) }));
+            Object.keys(filter.condition).map(key => finalFilter[key] = { $regex: this.getSearchedValue(filter.condition[key]) });
         }
 
         if (filter.searchPhrase) {
@@ -57,6 +56,11 @@ class MetadataService {
     static async search(filter) {
         const finalQuery = MetadataService.getFilter(filter);
         const limit = (Number.isNaN(parseInt(filter.limit, 10))) ? 0 : parseInt(filter.limit, 10);
+
+        if (process.env.DEBUG_TEST === 'true') {
+            console.log('test-----', JSON.stringify(finalQuery));
+        }
+
         logger.info(`Getting metadata with query: ${JSON.stringify(finalQuery)}`);
         return Metadata.find(finalQuery).limit(limit).exec();
     }

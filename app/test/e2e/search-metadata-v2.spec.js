@@ -34,11 +34,11 @@ describe('Search metadata', () => {
     });
 
     it('Search for metadata by name in multiple names should return two results matched to it', async () => {
-        const metadataOne = await createMetadataInDB({ name: 'metadata1' });
-        const metadataTwo = await createMetadataInDB({ name: 'metadata2' });
+        const metadataOne = await createMetadataInDB({ name: 'metadata' });
+        const metadataTwo = await createMetadataInDB({ name: 'sometest' });
 
         const response = await requester
-            .get('/api/v1/search?name=metadata1,metadata2');
+            .get('/api/v1/search?name=meta,some');
 
         response.status.should.equal(200);
         response.body.should.have.property('data').and.be.a('array').with.lengthOf(2);
@@ -49,10 +49,10 @@ describe('Search metadata', () => {
 
     it('Search for metadata by name in one name should return only one result matched to it', async () => {
         const metadataOne = await createMetadataInDB({ name: 'metadata1' });
-        await createMetadataInDB({ name: 'metadata2' });
+        await createMetadataInDB({ name: 'somedata' });
 
         const response = await requester
-            .get('/api/v1/search?name=metadata1');
+            .get('/api/v1/search?name=meta');
 
         response.status.should.equal(200);
         response.body.should.have.property('data').and.be.a('array').with.lengthOf(1);
@@ -241,38 +241,35 @@ describe('Search metadata', () => {
         validateMetadata(deserializeDataset(response)[0], metadataOne);
     });
 
+    it('Search for metadata with non matched name and matched description should return empty array', async () => {
+        await createMetadataInDB({ name: 'some', description: 'test2', altName: 'test2', application: 'skydipper2', url: 'test2', language: 'ru' });
+
+        const response = await requester
+            .get('/api/v1/search?name=test&description=test2');
+
+        response.status.should.equal(200);
+        response.body.should.have.property('data').and.be.a('array').with.lengthOf(0);
+    });
+
     it('Search for metadata by all available kes should return all matched result', async () => {
         // metadata in search range
-        await createMetadataInDB({ name: 'test2' });
-        await createMetadataInDB({ description: 'test2' });
-        await createMetadataInDB({ altName: 'test2' });
-        await createMetadataInDB({ application: 'skydipper2' });
-        await createMetadataInDB({ url: 'test2' });
-        await createMetadataInDB({ language: 'ru' });
+        await createMetadataInDB({ name: 'test2', description: 'test2', altName: 'test2', application: 'skydipper2', url: 'test2', language: 'ru' });
 
         // metadata out search range
         await createMetadataInDB({ altName: 'test1' });
-        await createMetadataInDB({ description: 'test1' });
-        await createMetadataInDB({ name: 'test1' });
-        await createMetadataInDB({ application: 'skydipper' });
-        await createMetadataInDB({ language: 'en' });
-        await createMetadataInDB({ url: 'test1' });
 
         const response = await requester
             .get('/api/v1/search?name=test2&description=test2&altName=test2&app=skydipper2&url=test2&language=ru');
 
         response.status.should.equal(200);
-        response.body.should.have.property('data').and.be.a('array').with.lengthOf(6);
+        response.body.should.have.property('data').and.be.a('array').with.lengthOf(1);
     });
 
     it('Search for metadata by all available kes but with limit should return all matched result not more than the specified limit', async () => {
         // metadata in search range
-        await createMetadataInDB({ name: 'test2' });
-        await createMetadataInDB({ description: 'test2' });
-        await createMetadataInDB({ altName: 'test2' });
-        await createMetadataInDB({ application: 'skydipper2' });
-        await createMetadataInDB({ url: 'test2' });
-        await createMetadataInDB({ language: 'ru' });
+        await createMetadataInDB({ name: 'test2', description: 'test2', altName: 'test2', application: 'skydipper2', url: 'test2', language: 'ru' });
+        await createMetadataInDB({ name: 'test2', description: 'test2', altName: 'test2', application: 'skydipper2', url: 'test2', language: 'ru' });
+        await createMetadataInDB({ name: 'test2', description: 'test2', altName: 'test2', application: 'skydipper2', url: 'test2', language: 'ru' });
 
         const response = await requester
             .get('/api/v1/search?name=test2&description=test2&altName=test2&app=skydipper2&url=test2&language=ru&limit=2');
