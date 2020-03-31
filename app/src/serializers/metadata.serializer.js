@@ -1,3 +1,6 @@
+const { omitBy } = require('lodash');
+
+const isHasValue = val => !val;
 
 class MetadataSerializer {
 
@@ -15,7 +18,7 @@ class MetadataSerializer {
                 result.data.push({
                     id: el._id,
                     type: 'metadata',
-                    attributes: {
+                    attributes: omitBy({
                         dataset: el.dataset,
                         application: el.application,
                         resource: el.resource,
@@ -23,7 +26,6 @@ class MetadataSerializer {
                         name: el.name,
                         altName: el.altName || '',
                         description: el.description,
-                        source: el.source,
                         citation: el.citation,
                         license: el.license,
                         variableMeasured: el.variableMeasured,
@@ -43,7 +45,7 @@ class MetadataSerializer {
                         spatialCoverage: el.spatialCoverage,
                         temporalCoverage: el.temporalCoverage,
                         status: el.status
-                    }
+                    }, isHasValue)
                 });
             });
         }
